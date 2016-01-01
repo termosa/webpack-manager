@@ -1,0 +1,26 @@
+{
+  "name": "webpack-manager",
+  "version": "1.0.0",
+  "description": "The interface to configure Webpack via code instead of settings list",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/termosa/webpack-manager.git"
+  },
+  "keywords": [
+    "webpack",
+    "build",
+    "config",
+    "manager",
+    "setup"
+  ],
+  "author": "Stanislav Termosa <termosa.stanislav@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/termosa/webpack-manager/issues"
+  },
+  "homepage": "https://github.com/termosa/webpack-manager#readme"
+}
