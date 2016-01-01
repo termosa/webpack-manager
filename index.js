@@ -1,61 +1,27 @@
-var $ = require("./utils");
-
-function parse(name) {
-  return name.split(".");
-}
-
-function pick(obj, name) {
-  var key, keys = parse(name);
-  while(key = keys.shift()) {
-    if (keys.length == 0) { return obj[key]; }
-    if (!$.isObject(obj[key])) { return; }
-    obj = obj[key];
-  }
-}
-
-function put(obj, name, value) {
-  var key, keys = parse(name);
-  while(key = keys.shift()) {
-    if (keys.length == 0) {
-      if ($.isObject(obj[key])) {
-        $.extend(obj[key], value);
-      } else {
-        if ($.isObject(value)) {
-          obj[key] = $.clone(value);
-        } else {
-          obj[key] = value;
-        }
-      }
-      return;
-    }
-    if (!$.isObject(obj[key])) {
-      obj[key] = {};
-    }
-    obj = obj[key];
-  }
-}
+var setupManager = require("setup-manager");
 
 module.exports = function(instance) {
-  var config = ($.isObject(instance) ? $.clone(instance) : {});
+  var manager = setupManager(instance);
 
-  var manager = {
-    setup: function() {
-      return config;
-    },
-    get: function(name) {
-      return pick(config, name);
-    },
-    set: function(name, value) {
-      if (typeof value == "undefined") {
-        return function builder(value) {
-          put(config, name, value);
-          return builder;
-        };
-      }
+  var addModules = manager.set("module");
+  manager.addModules = function(module) {
+    if (!module) { return addModules; }
+    addModules(module);
+    return manager;
+  };
 
-      put(config, name, value);
-      return manager;
-    }
+  var addLoaders = manager.set("module.loaders");
+  manager.addLoaders = function(loader) {
+    if (!loader) { return addLoaders; }
+    addLoaders(loader);
+    return manager;
+  };
+
+  var addPlugins = manager.set("plugins");
+  manager.addPlugins = function(plugin) {
+    if (!plugin) { return addPlugins; }
+    addPlugins(plugin);
+    return manager;
   };
 
   return manager;
