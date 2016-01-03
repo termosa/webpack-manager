@@ -196,6 +196,7 @@ module.exports = function(instance) {
       return entries;
     }, {});
     manager.set("entry", entries);
+    return manager;
   };
 
   manager.setExternal = function(name, value) {
@@ -285,6 +286,7 @@ module.exports = function(instance) {
   manager.addPlugin = function(plugins) {
     if (!isArray(plugins)) { plugins = [plugins]; }
     manager.set("plugins", plugins);
+    return manager;
   };
 
   return manager;
