@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/termosa/webpack-manager#readme",
   "dependencies": {
-    "setup-manager": "^1.0.0"
+    "setup-manager": "1.x"
   }
 }
