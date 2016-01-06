@@ -1,293 +1,138 @@
-var path = require("path");
 var setupManager = require("setup-manager");
-var absolute = function(pathname) { return path.resolve(pathname); };
 
-function isArray(object) { return object instanceof Array; }
-function isString(object) {
-  return typeof object == "string" || object instanceof String;
+function toString(object) {
+  return Object.prototype.toString.call(object);
+}
+
+function isObject(variable) {
+  return typeof variable === "object";
+}
+
+function isArray(variable) {
+  return isObject(variable) && toString(variable) === "[object Array]";
+}
+
+function createSetter(manager, property, withAdd) {
+  var builder = manager.set(property);
+
+  function set(name, value) {
+    builder(name, value);
+    return manager;
+  }
+
+  if (withAdd) {
+    set.add = function(values) {
+      if (!isArray(values)) { values = [values]; }
+      manager.set(property, values);
+    };
+  }
+
+  return set;
 }
 
 module.exports = function(instance) {
   var manager = setupManager(instance);
 
-  /* ===== Output ===== */
+  manager.context = createSetter(manager, "context");
+  manager.entry = createSetter(manager, "entry", true);
+  manager.externals = createSetter(manager, "externals", true);
+  manager.target = createSetter(manager, "target");
+  manager.bail = createSetter(manager, "bail");
+  manager.profile = createSetter(manager, "profile");
+  manager.cache = createSetter(manager, "cache");
+  manager.watch = createSetter(manager, "watch");
+  manager.watchOptions = createSetter(manager, "watchOptions");
+  manager.watchOptions = createSetter(manager, "watchOptions");
+  manager.debug = createSetter(manager, "debug");
+  manager.devtool = createSetter(manager, "devtool");
+  manager.node = createSetter(manager, "node");
+  manager.amd = createSetter(manager, "amd");
+  manager.loader = createSetter(manager, "loader");
+  manager.recordsPath = createSetter(manager, "recordsPath");
+  manager.recordsInputPath = createSetter(manager, "recordsInputPath");
+  manager.recordsOutputPath = createSetter(manager, "recordsOutputPath");
+  manager.plugins = createSetter(manager, "plugins", true);
 
-  manager.setOutputPath = function(path) {
-    manager.set("output.path", absolute(path));
-    return manager;
-  };
+  var output = createSetter(manager, "output");
+  manager.output = output;
+  output.path = createSetter(manager, "output.path");
+  output.filename = createSetter(manager, "output.filename");
+  output.chunkFilename = createSetter(manager, "output.chunkFilename");
+  output.sourceMapFilename = createSetter(manager, "output.sourceMapFilename");
+  output.devtoolModuleFilenameTemplate = createSetter(manager, "output.devtoolModuleFilenameTemplate");
+  output.devtoolFallbackModuleFilenameTemplate = createSetter(manager, "output.devtoolFallbackModuleFilenameTemplate");
+  output.devtoolLineToLine = createSetter(manager, "output.devtoolLineToLine");
+  output.hotUpdateChunkFilename = createSetter(manager, "output.hotUpdateChunkFilename");
+  output.hotUpdateMainFilename = createSetter(manager, "output.hotUpdateMainFilename");
+  output.publicPath = createSetter(manager, "output.publicPath");
+  output.jsonpFunction = createSetter(manager, "output.jsonpFunction");
+  output.hotUpdateFunction = createSetter(manager, "output.hotUpdateFunction");
+  output.pathinfo = createSetter(manager, "output.pathinfo");
+  output.library = createSetter(manager, "output.library");
+  output.libraryTarget = createSetter(manager, "output.libraryTarget");
+  output.umdNamedDefine = createSetter(manager, "output.umdNamedDefine");
+  output.sourcePrefix = createSetter(manager, "output.sourcePrefix");
+  output.crossOriginLoading = createSetter(manager, "output.crossOriginLoading");
 
-  manager.setOutputFilename = function(filename) {
-    manager.set("output.filename", filename);
-    return manager;
-  };
+  var module = createSetter(manager, "module");
+  manager.module = module;
+  module.loaders = createSetter(manager, "module.loaders", true);
+  module.preLoaders = createSetter(manager, "module.preLoaders", true);
+  module.postLoaders = createSetter(manager, "module.postLoaders", true);
+  module.noParse = createSetter(manager, "module.noParse", true);
+  module.unknownContextRequest = createSetter(manager, "module.unknownContextRequest");
+  module.unknownContextRecursive = createSetter(manager, "module.unknownContextRecursive");
+  module.unknownContextRegExp = createSetter(manager, "module.unknownContextRegExp");
+  module.unknownContextCritical = createSetter(manager, "module.unknownContextCritical");
+  module.exprContextRequest = createSetter(manager, "module.exprContextRequest");
+  module.exprContextRegExp = createSetter(manager, "module.exprContextRegExp");
+  module.exprContextRecursive = createSetter(manager, "module.exprContextRecursive");
+  module.exprContextCritical = createSetter(manager, "module.exprContextCritical");
+  module.wrappedContextRegExp = createSetter(manager, "module.wrappedContextRegExp");
+  module.wrappedContextRecursive = createSetter(manager, "module.wrappedContextRecursive");
+  module.wrappedContextCritical = createSetter(manager, "module.wrappedContextCritical");
 
-  manager.setOutputChunkFilename = function(chunkFilename) {
-    manager.set("output.chunkFilename", chunkFilename);
-    return manager;
-  };
+  var resolve = createSetter(manager, "resolve");
+  manager.resolve = resolve;
+  resolve.alias = createSetter(manager, "resolve.alias");
+  resolve.root = createSetter(manager, "resolve.root");
+  resolve.modulesDirectories = createSetter(manager, "resolve.modulesDirectories", true);
+  resolve.fallback = createSetter(manager, "resolve.fallback", true);
+  resolve.extensions = createSetter(manager, "resolve.extensions", true);
+  resolve.packageMains = createSetter(manager, "resolve.packageMains", true);
+  resolve.packageAlias = createSetter(manager, "resolve.packageAlias");
+  resolve.unsafeCache = createSetter(manager, "resolve.unsafeCache", true);
 
-  manager.setOutputMapFilename = function(mapFilename) {
-    manager.set("output.mapFilename", mapFilename);
-    return manager;
-  };
+  var resolveLoader = createSetter(manager, "resolveLoader");
+  manager.resolveLoader = resolveLoader;
+  resolveLoader.alias = createSetter(manager, "resolveLoader.alias");
+  resolveLoader.root = createSetter(manager, "resolveLoader.root");
+  resolveLoader.modulesDirectories = createSetter(manager, "resolveLoader.modulesDirectories", true);
+  resolveLoader.fallback = createSetter(manager, "resolveLoader.fallback", true);
+  resolveLoader.extensions = createSetter(manager, "resolveLoader.extensions", true);
+  resolveLoader.packageMains = createSetter(manager, "resolveLoader.packageMains", true);
+  resolveLoader.packageAlias = createSetter(manager, "resolveLoader.packageAlias");
+  resolveLoader.unsafeCache = createSetter(manager, "resolveLoader.unsafeCache", true);
+  resolveLoader.moduleTemplates = createSetter(manager, "resolveLoader.moduleTemplates", true);
 
-  /*
-   * Output:
-   * sourceMapFilename
-   * devtoolModuleFilenameTemplate
-   * devtoolLineToLine
-   * hotUpdateChunkFilename
-   * hotUpdateMainFilename
-   * jsonpFunction
-   * hotUpdateFunction
-   */
-
-  manager.setOutputPublicPath = function(path) {
-    manager.set("output.publicPath", path);
-    return manager;
-  };
-
-  manager.setOutputPathinfo = function(pathinfo) {
-    manager.set("output.pathinfo", pathinfo);
-    return manager;
-  };
-
-  manager.setOutputLibrary = function(library) {
-    manager.set("output.library", library);
-    return manager;
-  };
-
-  manager.setOutputLibraryTarget = function(libraryTarget) {
-    manager.set("output.libraryTarget", libraryTarget);
-    return manager;
-  };
-
-  manager.setOutputUmdNamedDefine = function(umdNamedDefine) {
-    manager.set("output.umdNamedDefine", umdNamedDefine);
-    return manager;
-  };
-
-  manager.setOutputSourcePrefix = function(sourcePrefix) {
-    manager.set("output.sourcePrefix", sourcePrefix);
-    return manager;
-  };
-
-  manager.setOutputCrossOriginLoading = function(crossOriginLoading) {
-    manager.set("output.crossOriginLoading", crossOriginLoading);
-    return manager;
-  };
-
-  /* ===== Module ===== */
-
-  manager.setModule = function(name, module) {
-    manager.set("module." + name, module);
-    return manager;
-  };
-
-  manager.addLoader = function(loaders) {
-    if (!isArray(loaders)) { loaders = [loaders]; }
-    manager.set("module.loaders", loaders);
-    return manager;
-  };
-
-  manager.addPreLoader = function(loaders) {
-    if (!isArray(loaders)) { loaders = [loaders]; }
-    manager.set("module.preLoaders", loaders);
-    return manager;
-  };
-
-  manager.addPostLoader = function(loaders) {
-    if (!isArray(loaders)) { loaders = [loaders]; }
-    manager.set("module.postLoaders", loaders);
-    return manager;
-  };
-
-  manager.addNoParse = function(rules) {
-    var exists = manager.get("module.noParse") || [];
-    manager.set("module.noParse", exists.concat(rules));
-    return manager;
-  };
-
-  /* ===== Resolve ===== */
-
-  manager.setAlias = function(name, alias) {
-    manager.set("resolve.alias." + name, alias);
-    return manager;
-  };
-
-  manager.setAliases = function(aliases) {
-    manager.set("resolve.alias", aliases);
-    return manager;
-  };
-
-  manager.setResolveRoot = function(path) {
-    manager.set("resolve.root", absolute(path));
-    return manager;
-  };
-
-  manager.addResolveModulesDirectory = function(dirs) {
-    if (!isArray(dirs)) { dirs = [dirs]; }
-    manager.set("resolve.modulesDirectories", dirs);
-    return manager;
-  };
-
-  manager.addResolveFallback = function(dirs) {
-    if (!isArray(dirs)) { dirs = [dirs]; }
-    dirs = dirs.map(absolute);
-    manager.set("resolve.fallback", dirs);
-    return manager;
-  };
-
-  manager.addResolveExtension = function(extensions) {
-    if (!isArray(extensions)) { extensions = [extensions]; }
-    manager.set("resolve.extensions", extensions);
-    return manager;
-  };
-
-  manager.addResolvePackageMain = function(mains) {
-    if (!isArray(mains)) { mains = [mains]; }
-    manager.set("resolve.packageMains", mains);
-    return manager;
-  };
-
-  manager.addResolvePackageAlias = function(aliases) {
-    if (!isArray(aliases)) { aliases = [aliases]; }
-    manager.set("resolve.packageAlias", aliases);
-    return manager;
-  };
-
-  manager.setResolveUnsafeCache = function(unsafeCache) {
-    manager.set("resolve.unsafeCache", unsafeCache);
-    return manager;
-  };
-
-  manager.addResolveUnsafeCache = function(rules) {
-    if (!isArray(rules)) { rules = [rules]; }
-    manager.set("resolve.unsafeCache", rules);
-    return manager;
-  };
-
-  /* ===== ResolveLoader ===== */
-
-  /*
-   * Same as for loaders
-   * + moduleTemplates
-   */
-
-  /* ===== Other ===== */
-
-  manager.setContext = function(context) {
-    manager.set("context", absolute(context));
-    return manager;
-  };
-
-  manager.setEntry = function(name, path) {
-    var entry = {};
-    entry[name] = path;
-    manager.set("entry", entry);
-    return manager;
-  };
-
-  manager.addEntry = function(entries) {
-    if (!isArray(entries)) { entries = [entries]; }
-    entries = entries.reduce(function(entries, entry) {
-      entries[entry.match(/([^\/]+)$/).pop()] = entry;
-      return entries;
-    }, {});
-    manager.set("entry", entries);
-    return manager;
-  };
-
-  manager.setExternal = function(name, value) {
-    var external = {};
-    external[name] = value;
-    manager.set("externals", [external]);
-    return manager;
-  };
-
-  manager.addExternal = function(externals) {
-    if (!isArray(externals)) { externals = [externals]; }
-    manager.set("externals", externals);
-    return manager;
-  };
-
-  manager.setTarget = function(target) {
-    manager.set("target", target);
-    return manager;
-  };
-
-  manager.setBail = function(bail) {
-    manager.set("bail", bail);
-    return manager;
-  };
-
-  manager.setProfile = function(profile) {
-    manager.set("profile", profile);
-    return manager;
-  };
-
-  manager.setCache = function(cache) {
-    manager.set("cache", cache);
-    return manager;
-  };
-
-  manager.setWatch = function(watch) {
-    manager.set("watch", watch);
-    return manager;
-  };
-
-  manager.setWatchAggregateTimeout = function(timeout) {
-    manager.set("watchOptions.aggregateTimeout", timeout);
-    return manager;
-  };
-
-  manager.setWatchPoll = function(poll) {
-    manager.set("watchOptions.poll", poll);
-    return manager;
-  };
-
-  manager.setDebug = function(debug) {
-    manager.set("debug", debug);
-    return manager;
-  };
-
-  manager.setDevtool = function(devtool) {
-    manager.set("devtool", devtool);
-    return manager;
-  };
-
-  manager.setDevServer = function(devServer) {
-    manager.set("devServer", devServer);
-    return manager;
-  };
-
-  manager.setNode = function(node) {
-    manager.set("node", node);
-    return manager;
-  };
-
-  manager.setAmd = function(amd) {
-    manager.set("amd", amd);
-    return manager;
-  };
-
-  manager.setLoader = function(loader) {
-    manager.set("loader", loader);
-    return manager;
-  };
-
-  /*
-   * recordsPath
-   * recordsInputPath
-   * recordsOutputPath
-   */
-
-  manager.addPlugin = function(plugins) {
-    if (!isArray(plugins)) { plugins = [plugins]; }
-    manager.set("plugins", plugins);
-    return manager;
-  };
+  var devServer = createSetter(manager, "devServer");
+  manager.devServer = devServer;
+  devServer.host = createSetter(manager, "devServer.host");
+  devServer.port = createSetter(manager, "devServer.port");
+  devServer.contentBase = createSetter(manager, "devServer.contentBase");
+  devServer.hot = createSetter(manager, "devServer.hot");
+  devServer.historyApiFallback = createSetter(manager, "devServer.historyApiFallback");
+  devServer.proxy = createSetter(manager, "devServer.proxy", true);
+  devServer.quiet = createSetter(manager, "devServer.quiet");
+  devServer.noInfo = createSetter(manager, "devServer.noInfo");
+  devServer.lazy = createSetter(manager, "devServer.lazy");
+  devServer.filename = createSetter(manager, "devServer.filename");
+  devServer.watchOptions = createSetter(manager, "devServer.watchOptions");
+  devServer.watchOptions.aggregateTimeout = createSetter(manager, "devServer.watchOptions.aggregateTimeout");
+  devServer.watchOptions.poll = createSetter(manager, "devServer.watchOptions.poll");
+  devServer.publicPath = createSetter(manager, "devServer.publicPath");
+  devServer.headers = createSetter(manager, "devServer.headers");
+  devServer.stats = createSetter(manager, "devServer.stats");
 
   return manager;
 }

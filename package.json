@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/termosa/webpack-manager#readme",
   "dependencies": {
-    "setup-manager": "1.x"
+    "setup-manager": ">=1.2.0"
   },
   "devDependencies": {
     "chai": "3.4.1",
