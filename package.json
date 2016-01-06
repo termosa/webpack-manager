@@ -1,6 +1,6 @@
 {
   "name": "webpack-manager",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "The interface to configure Webpack via code instead of settings list",
   "main": "webpack-manager.js",
   "scripts": {
