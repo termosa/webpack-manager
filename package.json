@@ -2,9 +2,9 @@
   "name": "webpack-manager",
   "version": "1.0.4",
   "description": "The interface to configure Webpack via code instead of settings list",
-  "main": "index.js",
+  "main": "webpack-manager.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/mocha/bin/mocha tests/"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,9 @@
   "homepage": "https://github.com/termosa/webpack-manager#readme",
   "dependencies": {
     "setup-manager": "1.x"
+  },
+  "devDependencies": {
+    "chai": "3.4.1",
+    "mocha": "2.3.4"
   }
 }
